@@ -1,0 +1,12 @@
+com\sgu\login\model\User.class
+com\sgu\login\repository\UserRepository.class
+com\sgu\login\model\Product.class
+com\sgu\login\FloginBeApplication.class
+com\sgu\login\service\ProductService.class
+com\sgu\login\service\AuthService.class
+com\sgu\login\dto\LoginRequest.class
+com\sgu\login\repository\ProductRepository.class
+com\sgu\login\dto\ProductDTO.class
+com\sgu\login\config\DataLoader.class
+com\sgu\login\controller\AuthController.class
+com\sgu\login\controller\ProductController.class
