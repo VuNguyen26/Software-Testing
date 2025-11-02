@@ -4,6 +4,8 @@ com\sgu\login\model\Product.class
 com\sgu\login\FloginBeApplication.class
 com\sgu\login\service\ProductService.class
 com\sgu\login\service\AuthService.class
+com\sgu\login\dto\LoginResponse.class
+com\sgu\login\dto\UserDto.class
 com\sgu\login\dto\LoginRequest.class
 com\sgu\login\repository\ProductRepository.class
 com\sgu\login\dto\ProductDTO.class

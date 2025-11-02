@@ -1,11 +1,13 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 FloginBE,com.sgu.login.config,DataLoader,19,0,2,0,5,0,4,0,3,0
-FloginBE,com.sgu.login.controller,AuthController,20,0,0,0,3,0,2,0,2,0
+FloginBE,com.sgu.login.controller,AuthController,0,24,0,0,0,6,0,2,0,2
 FloginBE,com.sgu.login.controller,ProductController,41,0,4,0,8,0,5,0,3,0
 FloginBE,com.sgu.login.service,ProductService,19,70,0,0,2,17,3,6,3,6
 FloginBE,com.sgu.login.service,AuthService,0,55,2,8,0,12,2,6,0,3
-FloginBE,com.sgu.login,FloginBeApplication,8,0,0,0,3,0,2,0,2,0
-FloginBE,com.sgu.login.dto,LoginRequest,3,0,0,0,1,0,1,0,1,0
+FloginBE,com.sgu.login,FloginBeApplication,5,3,0,0,2,1,1,1,1,1
+FloginBE,com.sgu.login.dto,UserDto,15,0,0,0,6,0,3,0,3,0
+FloginBE,com.sgu.login.dto,LoginRequest,0,26,0,0,0,11,0,6,0,6
 FloginBE,com.sgu.login.dto,ProductDTO,3,0,0,0,1,0,1,0,1,0
+FloginBE,com.sgu.login.dto,LoginResponse,27,0,0,0,10,0,5,0,5,0
 FloginBE,com.sgu.login.model,Product,10,53,0,0,3,13,3,11,3,11
 FloginBE,com.sgu.login.model,User,18,15,0,0,5,3,5,3,5,3
