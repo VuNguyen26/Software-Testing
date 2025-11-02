@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/productService.js</title>
+    <title>Code coverage report for src/components/ProductDetail.jsx</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/services</a> productService.js</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/components</a> ProductDetail.jsx</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.88% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>7/18</span>
+                <span class='fraction'>19/19</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">87.5% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/3</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.88% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/18</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -84,48 +84,60 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L22'></a><a href='#L22'>22</a>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { api } from './api.js'
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import React, { useEffect, useState } from 'react'
+import { getProductById } from '../services/productService'
 &nbsp;
-// ✅ Tạo sản phẩm (đã có sẵn)
-export <span class="fstat-no" title="function not covered" >async function createProduct(body, token) {</span>
-<span class="cstat-no" title="statement not covered" >  const { data } = await api.post('/products', body, {</span>
-<span class="cstat-no" title="statement not covered" >    headers: token ? { Authorization: `Bearer ${token}` } : {},</span>
-<span class="cstat-no" title="statement not covered" >  })</span>
-<span class="cstat-no" title="statement not covered" >  return data</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+export default function ProductDetail({ id }) {
+  const [product, setProduct] = useState(null)
+  const [error, setError] = useState('')
 &nbsp;
-// ✅ Lấy danh sách sản phẩm
-export <span class="fstat-no" title="function not covered" >async function getProducts() {</span>
-<span class="cstat-no" title="statement not covered" >  const { data } = await api.get('/products')</span>
-<span class="cstat-no" title="statement not covered" >  return data</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  useEffect(() =&gt; {
+    getProductById(id)
+      .then(setProduct)
+      .catch((err) =&gt; setError(err?.<span class="branch-0 cbranch-no" title="branch not covered" >message || 'Load failed')</span>)
+  }, [id])
 &nbsp;
-// ✅ Lấy chi tiết sản phẩm theo ID
-export <span class="fstat-no" title="function not covered" >async function getProductById(id) {</span>
-<span class="cstat-no" title="statement not covered" >  const { data } = await api.get(`/products/${id}`)</span>
-<span class="cstat-no" title="statement not covered" >  return data</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  if (error) return &lt;p role="alert"&gt;{error}&lt;/p&gt;
+  if (!product) return &lt;p role="status"&gt;Loading...&lt;/p&gt;
+&nbsp;
+  return (
+    &lt;div aria-label="product-detail"&gt;
+      &lt;h2&gt;{product.name}&lt;/h2&gt;
+      &lt;p data-testid="price"&gt;{product.price}&lt;/p&gt;
+      &lt;p data-testid="quantity"&gt;{product.quantity}&lt;/p&gt;
+      &lt;p data-testid="category"&gt;{product.category}&lt;/p&gt;
+    &lt;/div&gt;
+  )
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->

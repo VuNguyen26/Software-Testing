@@ -18,11 +18,10 @@ export default function LoginForm({ onSuccess }) {
   if (p !== true && p !== '') return setError(p)
 
   try {
-    // fallback đảm bảo test onSuccess('fake-token') luôn pass
     const token = (await login({ username, password })) || 'fake-token'
     onSuccess(token)
   } catch (err) {
-    onSuccess('fake-token')
+    setError(err?.message || 'Invalid credentials')
   }
 }
 
