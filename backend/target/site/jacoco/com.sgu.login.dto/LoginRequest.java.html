@@ -13,16 +13,16 @@ public class LoginRequest {
     @Size(min = 6, max = 100)
     private String password;
 
-    // ✅ Constructor mặc định (cần cho Spring deserialization)
+    // Constructor mặc định (cần cho Spring deserialization)
 <span class="fc" id="L17">    public LoginRequest() {}</span>
 
-    // ✅ Constructor 2 tham số (cần cho test)
+    // Constructor 2 tham số (cần cho test)
 <span class="fc" id="L20">    public LoginRequest(String username, String password) {</span>
 <span class="fc" id="L21">        this.username = username;</span>
 <span class="fc" id="L22">        this.password = password;</span>
 <span class="fc" id="L23">    }</span>
 
-    // ✅ Getter &amp; Setter
+    // Getter &amp; Setter
     public String getUsername() {
 <span class="fc" id="L27">        return username;</span>
     }

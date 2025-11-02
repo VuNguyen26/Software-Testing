@@ -1,3 +1,4 @@
-com\sgu\login\AuthServiceTest.class
 com\sgu\login\controller\AuthControllerIntegrationTest.class
 com\sgu\login\ProductServiceTest.class
+com\sgu\login\AuthServiceTest.class
+com\sgu\login\controller\ProductControllerIntegrationTest.class

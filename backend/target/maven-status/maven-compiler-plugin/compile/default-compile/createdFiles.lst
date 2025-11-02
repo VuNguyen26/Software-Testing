@@ -8,6 +8,7 @@ com\sgu\login\dto\LoginResponse.class
 com\sgu\login\dto\UserDto.class
 com\sgu\login\dto\LoginRequest.class
 com\sgu\login\repository\ProductRepository.class
+com\sgu\login\dto\Product.class
 com\sgu\login\dto\ProductDTO.class
 com\sgu\login\config\DataLoader.class
 com\sgu\login\controller\AuthController.class

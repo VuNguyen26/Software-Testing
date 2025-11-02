@@ -23,26 +23,26 @@ import jakarta.validation.Valid;
 public class ProductController {
     private final ProductService service;
 
-<span class="nc" id="L26">    public ProductController(ProductService service) {</span>
-<span class="nc" id="L27">        this.service = service;</span>
-<span class="nc" id="L28">    }</span>
+<span class="fc" id="L26">    public ProductController(ProductService service) {</span>
+<span class="fc" id="L27">        this.service = service;</span>
+<span class="fc" id="L28">    }</span>
 
     @PostMapping
     public ResponseEntity&lt;Product&gt; create(
             @Valid @RequestBody ProductDTO dto,
             @RequestHeader(value = &quot;Authorization&quot;, required = false) String auth) {
         // demo auth check
-<span class="nc bnc" id="L35" title="All 4 branches missed.">        if (auth == null || !auth.startsWith(&quot;Bearer demo-token-&quot;)) {</span>
-<span class="nc" id="L36">            return ResponseEntity.status(401).build();</span>
+<span class="pc bpc" id="L35" title="1 of 4 branches missed.">        if (auth == null || !auth.startsWith(&quot;Bearer demo-token-&quot;)) {</span>
+<span class="fc" id="L36">            return ResponseEntity.status(401).build();</span>
         }
-<span class="nc" id="L38">        var p = new Product(dto.name, dto.price, dto.quantity, dto.description, dto.category);</span>
-<span class="nc" id="L39">        return ResponseEntity.ok(service.create(p));</span>
+<span class="fc" id="L38">        var p = new Product(dto.name, dto.price, dto.quantity, dto.description, dto.category);</span>
+<span class="fc" id="L39">        return ResponseEntity.ok(service.create(p));</span>
     }
 
     @GetMapping
     public ResponseEntity&lt;List&lt;Product&gt;&gt; list() {
         // gọi đúng phương thức trong ProductService
-<span class="nc" id="L45">        return ResponseEntity.ok(service.getAll());</span>
+<span class="fc" id="L45">        return ResponseEntity.ok(service.getAll());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
