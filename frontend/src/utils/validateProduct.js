@@ -1,9 +1,30 @@
-export function validateProduct({name, price, quantity, description, category}) {
-  if (!name || name.length < 3 || name.length > 100) return 'Name 3-100 chars'
-  if (!(price > 0 && price <= 999999999)) return 'Price must be >0 and ≤ 999,999,999'
-  if (!(Number.isInteger(quantity) && quantity >= 0 && quantity <= 99999)) return 'Quantity 0-99,999'
-  if (description && description.length > 500) return 'Description ≤500 chars'
-  const allowed = ['SPORT','ELECTRONIC','FOOD']
-  if (!allowed.includes(category)) return 'Invalid category'
-  return true
+export function validateProduct(product) {
+  if (!product) return 'Invalid product'
+
+  const errors = {}
+
+  if (!product.name || product.name.trim() === '') {
+    errors.name = 'Product name is required'
+  }
+
+  if (product.price == null || product.price <= 0) {
+    errors.price = 'Price must be greater than 0'
+  }
+
+  if (product.quantity == null || product.quantity < 0) {
+    errors.quantity = 'Quantity cannot be negative'
+  }
+
+  if (product.description && product.description.length > 500) {
+    errors.description = 'Description too long'
+  }
+
+  const validCategories = ['Electronics', 'Food', 'Clothing', 'SPORT', 'Accessories']
+  if (product.category && !validCategories.includes(product.category)) {
+    errors.category = 'Invalid category'
+  }
+
+  if (Object.keys(errors).length === 0) return true
+  if (Object.keys(errors).length === 0) return {}
+  return errors
 }
