@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # FloginFE_BE (SGU Assignment Starter)
 
 ## Quick Start
@@ -28,3 +29,6 @@ npm run dev                       # open http://localhost:5173
 ---
 
 This starter meets core rules: login + product CRUD endpoints, FE validation, unit tests for FE & BE, minimal integration points.
+=======
+# FloginFE_BE
+>>>>>>> c3265830b36a6eafd079988652e05e23176a9ff3
