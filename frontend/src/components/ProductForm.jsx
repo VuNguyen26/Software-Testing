@@ -57,9 +57,18 @@ export default function ProductForm({ token }) {
         </select>
       </div>
 
-      {msg && <p role={msg.toLowerCase().includes('fail') || msg.toLowerCase().includes('error') ? 'alert' : 'status'}>
-      {msg}
-    </p>}
+      {msg && (
+      <p
+        role={
+          typeof msg === 'string' &&
+          (msg.toLowerCase().includes('fail') || msg.toLowerCase().includes('error'))
+            ? 'alert'
+            : 'status'
+        }
+      >
+        {typeof msg === 'string' ? msg : JSON.stringify(msg)}
+      </p>
+    )}
       <button type="submit" style={{marginTop:12}}>Save</button>
     </form>
   )
