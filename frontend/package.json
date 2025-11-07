@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest --run --coverage"
+    "test": "vitest --run --coverage",
+    "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --spec cypress/e2e/login.cy.js --browser chrome --headless'"
   },
   "dependencies": {
     "axios": "^1.7.7",
@@ -24,6 +25,7 @@
     "@vitest/coverage-v8": "^2.1.9",
     "cypress": "^15.6.0",
     "jsdom": "^25.0.0",
+    "start-server-and-test": "^2.1.2",
     "vite": "^5.4.0",
     "vitest": "^2.1.3"
   }
