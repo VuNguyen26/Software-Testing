@@ -27,7 +27,7 @@ jobs:
       - name: Run Unit & Integration Tests
         run: |
           cd frontend
-          npm test -- --testPathPattern=Login --coverage
+          npm test -- --testPathPattern=Login
 
       - name: Run Cypress E2E Tests
         run: |
