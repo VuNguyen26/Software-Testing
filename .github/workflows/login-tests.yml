@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Install dependencies
         run: |
@@ -30,8 +30,12 @@ jobs:
           npx vitest run --coverage
 
       - name: Run Cypress E2E Tests
+        env:
+          CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
         run: |
           cd frontend
+          npx cypress install
+          npx cypress verify
           npx cypress run --spec "cypress/e2e/login.cy.js" --browser chrome --headless
 
       - name: Upload Cypress videos and screenshots (optional)
