@@ -1,6 +1,6 @@
 describe('Login E2E Tests', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:5173')
+    cy.visit('http://localhost:4173')
   })
 
   it('Hiển thị form đăng nhập', () => {
