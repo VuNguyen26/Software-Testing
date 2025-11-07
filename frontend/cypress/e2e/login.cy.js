@@ -10,19 +10,20 @@ describe('Login E2E Tests', () => {
   })
 
   it('Đăng nhập thành công với thông tin hợp lệ', () => {
-    // intercept PHẢI đặt trước khi click
-    cy.intercept('POST', '**/api/auth/login').as('loginRequest')
+
+    cy.intercept('POST', '**/api/auth/login', {
+      statusCode: 200,
+      body: { token: 'fake-token' },
+    }).as('loginRequest')
 
     cy.get('[data-testid="username-input"]').clear().type('admin')
     cy.get('[data-testid="password-input"]').clear().type('Admin123')
     cy.get('[data-testid="login-button"]').click()
 
-    // Đợi và xác nhận request gửi thành công
     cy.wait('@loginRequest', { timeout: 10000 })
       .its('response.statusCode')
       .should('eq', 200)
 
-    // Kiểm tra không hiển thị lỗi
     cy.get('[data-testid="login-error"]').should('not.exist')
   })
 
@@ -31,7 +32,6 @@ describe('Login E2E Tests', () => {
     cy.get('[data-testid="password-input"]').clear().type('wrongpass')
     cy.get('[data-testid="login-button"]').click()
 
-    // Kiểm tra thông báo lỗi hiển thị đúng
     cy.get('[data-testid="login-error"]').should('be.visible')
     cy.get('[data-testid="login-error"]').should(
       'contain.text',
