@@ -2,9 +2,9 @@ name: Login Tests CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, lam ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, lam ]
 
 jobs:
   test-login:
