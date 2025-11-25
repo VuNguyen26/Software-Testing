@@ -6,7 +6,7 @@ import './ProductForm.css';
 
 export default function ProductForm({ token }) {
   const [form, setForm] = useState({ name: '', price: 0, quantity: 0, description: '', category: 'SPORT' });
-  const [msg, setMsg] = useState('');
+  const [msg, setMsg] = useState({ text: null, type: '' }); // { text, type: 'success' | 'error' }
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
@@ -15,7 +15,7 @@ export default function ProductForm({ token }) {
     if (isEditMode) {
       getProductById(id, token)
         .then(product => setForm(product))
-        .catch(err => setMsg(err?.message || 'Failed to load product data'));
+        .catch(err => setMsg({ text: err?.message || 'Failed to load product data', type: 'error' }));
     }
   }, [id, isEditMode, token]);
 
@@ -26,18 +26,24 @@ export default function ProductForm({ token }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMsg('');
-    const valid = validateProduct(form);
-    if (valid !== true) return setMsg(valid);
+    setMsg({ text: null, type: '' });
+    const validationError = validateProduct(form);
+    if (validationError !== true) {
+      return setMsg({ text: validationError, type: 'error' });
+    }
+
     try {
       if (isEditMode) {
-        await updateProduct(id, form, token);
+        const updated = await updateProduct(id, form, token);
+        setMsg({ text: `Updated product id=${updated.id}`, type: 'success' });
+        // navigate('/products');
       } else {
-        await createProduct(form, token);
+        const created = await createProduct(form, token);
+        setMsg({ text: `Created product id=${created.id}`, type: 'success' });
+        // navigate('/products');
       }
-      navigate('/products');
     } catch (err) {
-      setMsg(err?.message || (isEditMode ? 'Update failed' : 'Create failed'));
+      setMsg({ text: err?.message || (isEditMode ? 'Update failed' : 'Create failed'), type: 'error' });
     }
   };
 
@@ -75,10 +81,10 @@ export default function ProductForm({ token }) {
           </select>
         </div>
 
-        {msg && (
-          <p className="error-message" role="alert">
-            {typeof msg === 'string' ? msg : JSON.stringify(msg)}
-          </p>
+        {msg.text && (
+          <div role={msg.type === 'error' ? 'alert' : 'status'}>
+            {typeof msg.text === 'string' ? msg.text : JSON.stringify(msg.text)}
+          </div>
         )}
         <button type="submit">Save</button>
       </form>

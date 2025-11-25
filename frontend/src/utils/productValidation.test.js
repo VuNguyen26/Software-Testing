@@ -38,7 +38,7 @@ describe('PRODUCT VALIDATION TESTS', () => {
   })
 
   test('TC06: Dữ liệu hợp lệ → không lỗi', () => {
-    const p = { name: 'Laptop Dell', price: 15000000, quantity: 10, category: 'Electronics' }
+    const p = { name: 'Laptop Dell', price: 15000000, quantity: 10, category: 'ELECTRONICS' }
     const e = validateProduct(p)
     expect(Object.keys(e).length).toBe(0)
   })

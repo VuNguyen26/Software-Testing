@@ -55,10 +55,52 @@ public class AuthServiceTest {
     }
 
     @Test
+    void login_short_username() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("a", "abc"));
+    }
+
+    @Test
+    void login_long_username() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("a".repeat(51), "abc"));
+    }
+
+    @Test
+    void login_invalid_username() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("admin@", "abc"));
+    }
+
+    @Test
     void login_empty_password() {
         var repo = Mockito.mock(UserRepository.class);
         var svc = new AuthService(repo);
 
         assertThrows(IllegalArgumentException.class, () -> svc.authenticate("admin", ""));
+    }
+
+    @Test
+    void login_short_password() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("admin", "a"));
+    }
+
+    @Test
+    void login_long_password() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("admin", "a".repeat(101)));
+    }
+
+    @Test
+    void login_invalid_password() {
+        var repo = Mockito.mock(UserRepository.class);
+        var svc = new AuthService(repo);
+        assertThrows(IllegalArgumentException.class, () -> svc.authenticate("admin", "admin"));
     }
 }

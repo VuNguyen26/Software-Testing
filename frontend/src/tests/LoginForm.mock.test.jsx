@@ -22,8 +22,8 @@ describe("Mock testing for LoginForm", () => {
     fireEvent.change(passwordInput, { target: { value: "Admin123" } })
 
 
-    // Nút bạn hiển thị chữ "Sign in", nên đổi selector cho đúng
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }))
+    // Nút hiển thị chữ "Login", nên đổi selector cho đúng
+    fireEvent.click(screen.getByRole("button", { name: /login/i }))
 
     // Chờ hiển thị thông báo thành công (giả sử có dòng text "Success" hoặc tương tự)
     expect(await screen.findByText(/success/i)).toBeInTheDocument()
@@ -33,7 +33,7 @@ describe("Mock testing for LoginForm", () => {
 
     // THẤT BẠI
     authService.login.mockRejectedValueOnce(new Error("Invalid credentials"))
-    fireEvent.click(screen.getByRole("button", { name: /sign in/i }))
+    fireEvent.click(screen.getByRole("button", { name: /login/i }))
 
     // Chờ thông báo lỗi
     expect(await screen.findByText(/invalid/i)).toBeInTheDocument()
