@@ -72,7 +72,7 @@ describe('Login Integration', () => {
 
     // Vẫn phải nhập liệu để đảm bảo quy trình đúng
     fireEvent.change(screen.getByLabelText(/username/i), { target: { value: 'wrong' } })
-    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'wrong' } })
+    fireEvent.change(screen.getByLabelText(/password/i), { target: { value: 'wrong123' } })
     
     fireEvent.click(screen.getByRole('button', { name: /login/i }))
 
