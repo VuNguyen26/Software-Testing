@@ -12,14 +12,19 @@ export default function LoginForm({ onSuccess }) {
     e.preventDefault();
     setError('');
 
+    const validationErrors = [];
     const uError = validateUsername(username);
     if (uError !== true && uError !== '') {
-      return setError(uError);
+      validationErrors.push(uError);
     }
 
     const pError = validatePassword(password);
     if (pError !== true && pError !== '') {
-      return setError(pError);
+      validationErrors.push(pError);
+    }
+
+    if (validationErrors.length > 0) {
+      return setError(validationErrors.join('. '));
     }
 
     try {
@@ -45,6 +50,7 @@ export default function LoginForm({ onSuccess }) {
             name="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            data-testid="username-input"
           />
         </div>
         <div className="form-group">
@@ -55,10 +61,11 @@ export default function LoginForm({ onSuccess }) {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            data-testid="password-input"
           />
         </div>
-        {error && <p className="error-message" role="alert">{error}</p>}
-        <button type="submit">Login</button>
+        {error && <p className="error-message" role="alert" data-testid="login-error">{error}</p>}
+        <button type="submit" data-testid="login-button">Login</button>
       </form>
     </div>
   );
