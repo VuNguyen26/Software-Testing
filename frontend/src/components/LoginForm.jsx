@@ -11,14 +11,18 @@ export default function LoginForm({ onSuccess }) {
     e.preventDefault()
     setError('')
 
-    const u = validateUsername(username)
-    const p = validatePassword(password)
+    // Trim whitespace from username and password
+    const trimmedUsername = username.trim()
+    const trimmedPassword = password.trim()
+
+    const u = validateUsername(trimmedUsername)
+    const p = validatePassword(trimmedPassword)
     // chấp nhận cả true và ''
     if (u !== true && u !== '') return setError(u)
     if (p !== true && p !== '') return setError(p)
 
     try {
-      const token = (await login({ username, password })) || 'fake-token'
+      const token = (await login({ username: trimmedUsername, password: trimmedPassword })) || 'fake-token'
       onSuccess(token)
     } catch (err) {
       setError(err?.message || 'Invalid credentials')
