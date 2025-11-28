@@ -64,7 +64,7 @@ export default function ProductForm({ token }) {
 
         <div className="form-group">
           <label htmlFor="quantity">Quantity</label>
-          <input id="quantity" name="quantity" type="number" value={form.quantity} onChange={handleChange} />
+          <input id="quantity" name="quantity" type="number" value={form.quantity} onChange={handleChange} data-testid="product-quantity-input" />
         </div>
 
         <div className="form-group">
