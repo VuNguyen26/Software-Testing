@@ -54,12 +54,12 @@ export default function ProductForm({ token }) {
 
         <div className="form-group">
           <label htmlFor="name">Name</label>
-          <input id="name" name="name" value={form.name} onChange={handleChange} />
+          <input id="name" name="name" value={form.name} onChange={handleChange} data-testid="product-name-input" />
         </div>
 
         <div className="form-group">
           <label htmlFor="price">Price</label>
-          <input id="price" name="price" type="number" value={form.price} onChange={handleChange} />
+          <input id="price" name="price" type="number" value={form.price} onChange={handleChange} data-testid="product-price-input" />
         </div>
 
         <div className="form-group">
@@ -69,12 +69,12 @@ export default function ProductForm({ token }) {
 
         <div className="form-group">
           <label htmlFor="description">Description</label>
-          <textarea id="description" name="description" value={form.description} onChange={handleChange} />
+          <textarea id="description" name="description" value={form.description} onChange={handleChange} data-testid="product-description-input" />
         </div>
 
         <div className="form-group">
           <label htmlFor="category">Category</label>
-          <select id="category" name="category" value={form.category} onChange={handleChange}>
+          <select id="category" name="category" value={form.category} onChange={handleChange} data-testid="product-category-input">
             <option>SPORT</option>
             <option>ELECTRONIC</option>
             <option>FOOD</option>
@@ -82,11 +82,11 @@ export default function ProductForm({ token }) {
         </div>
 
         {msg.text && (
-          <div role={msg.type === 'error' ? 'alert' : 'status'}>
+          <div role={msg.type === 'error' ? 'alert' : 'status'} data-testid={msg.type === 'error' ? 'validation-error' : 'notification'}>
             {typeof msg.text === 'string' ? msg.text : JSON.stringify(msg.text)}
           </div>
         )}
-        <button type="submit">Save</button>
+        <button type="submit" data-testid="save-product-button">Save</button>
       </form>
     </div>
   );

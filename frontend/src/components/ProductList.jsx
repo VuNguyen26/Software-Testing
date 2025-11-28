@@ -45,13 +45,13 @@ export default function ProductList({ token }) {
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
-          <Link to="/products/new" className="btn btn-primary">
+          <Link to="/products/new" className="btn btn-primary" data-testid="add-product-button">
             Create New Product
           </Link>
         </div>
       </div>
       {error && <p role="alert" className="error-message">{error}</p>}
-      <table className="product-table">
+      <table className="product-table" data-testid="product-list">
         <thead>
           <tr>
             <th>Name</th>
@@ -68,9 +68,9 @@ export default function ProductList({ token }) {
               <td>{p.quantity}</td>
               <td>
                 <Link to={`/products/${p.id}/edit`}>
-                  <button className="btn btn-secondary">Edit</button>
+                  <button className="btn btn-secondary" data-testid="edit-product-button">Edit</button>
                 </Link>
-                <button onClick={() => handleDelete(p.id)} className="btn btn-danger">
+                <button onClick={() => handleDelete(p.id)} className="btn btn-danger" data-testid="delete-product-button">
                   Delete
                 </button>
               </td>
