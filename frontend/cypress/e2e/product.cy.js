@@ -14,7 +14,7 @@ describe('Product E2E Tests', () => {
         cy.get('[data-testid="product-quantity-input"]').type('10')
         cy.get('[data-testid="product-price-input"]').type('99.99')
         cy.get('[data-testid="product-description-input"]').type('This is a new product.')
-        cy.get('[data-testid="product-category-input"]').select('ELECTRONICSS')
+        cy.get('[data-testid="product-category-input"]').select('ELECTRONICS')
         cy.get('[data-testid="save-product-button"]').click()
         cy.get('[data-testid="product-list"]').should('contain', 'New Product')
     })
