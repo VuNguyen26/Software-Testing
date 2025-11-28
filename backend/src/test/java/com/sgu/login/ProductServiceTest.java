@@ -77,4 +77,26 @@ public class ProductServiceTest {
         Mockito.when(repo.findById(99L)).thenReturn(Optional.empty());
         assertThrows(NoSuchElementException.class, () -> svc.delete(99L));
     }
+
+    @Test
+    void update_not_found_throws() {
+        var p = new Product("Ball", 2000, 3, "", "SPORT");
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> svc.update(1L, p));
+    }
+
+    @Test
+    void get_by_id_returns_product() {
+        var p = new Product("Ball", 1000, 1, "", "SPORT");
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.of(p));
+
+        Product result = svc.getById(1L);
+        assertEquals("Ball", result.getName());
+    }
+
+    @Test
+    void get_by_id_not_found_throws() {
+        Mockito.when(repo.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(NoSuchElementException.class, () -> svc.getById(1L));
+    }
 }

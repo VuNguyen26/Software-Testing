@@ -5,6 +5,7 @@
 import React from 'react'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 
 // Mock đúng tên export của service
 vi.mock('../services/productService.js', () => ({
@@ -29,12 +30,17 @@ describe('Product Integration', () => {
       category: 'SPORT',
     })
 
-    render(<ProductForm />)
+    render(
+      <MemoryRouter>
+        <ProductForm />
+      </MemoryRouter>
+    )
 
     // Nhập dữ liệu vào form
     fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'Ball' } })
     fireEvent.change(screen.getByLabelText(/price/i), { target: { value: '1000' } })
     fireEvent.change(screen.getByLabelText(/quantity/i), { target: { value: '1' } })
+    fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'A nice ball' } })
     const cat = screen.queryByLabelText(/category/i)
     if (cat) fireEvent.change(cat, { target: { value: 'SPORT' } })
 
@@ -64,12 +70,19 @@ describe('Product Integration', () => {
     // Giả lập API ném lỗi
     createProduct.mockRejectedValueOnce(new Error('Server error'))
 
-    render(<ProductForm />)
+    render(
+      <MemoryRouter>
+        <ProductForm />
+      </MemoryRouter>
+    )
 
     // Nhập dữ liệu vào form
     fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'Ball' } })
     fireEvent.change(screen.getByLabelText(/price/i), { target: { value: '1000' } })
     fireEvent.change(screen.getByLabelText(/quantity/i), { target: { value: '1' } })
+    fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'A nice ball' } })
+    const cat = screen.queryByLabelText(/category/i)
+    if (cat) fireEvent.change(cat, { target: { value: 'SPORT' } })
 
     // Gửi form
     fireEvent.submit(screen.getByLabelText('product-form'))

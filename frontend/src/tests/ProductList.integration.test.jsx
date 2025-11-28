@@ -4,6 +4,7 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { vi } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 
 vi.mock('../services/productService.js', () => ({
   getProducts: vi.fn(),
@@ -21,18 +22,26 @@ describe('ProductList Integration', () => {
       { id: 2, name: 'Shoes' },
     ])
 
-    render(<ProductList />)
+    render(
+      <MemoryRouter>
+        <ProductList />
+      </MemoryRouter>
+    )
 
     await waitFor(() => {
       const items = screen.getAllByTestId('product-item')
       expect(items).toHaveLength(2)
-      expect(items[0].textContent).toBe('Ball')
+      expect(items[0]).toHaveTextContent('Ball')
     })
   })
 
   test('Hiển thị lỗi khi API lỗi', async () => {
     getProducts.mockRejectedValueOnce(new Error('Server error'))
-    render(<ProductList />)
+    render(
+      <MemoryRouter>
+        <ProductList />
+      </MemoryRouter>
+    )
 
     await waitFor(() => {
       expect(screen.getByRole('alert').textContent).toMatch(/server error/i)

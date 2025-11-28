@@ -1,9 +1,10 @@
 describe('Login E2E Tests', () => {
   beforeEach(() => {
-    cy.visit('http://localhost:4173')
+    cy.visit('http://localhost:5173') // Đảm bảo port đúng với máy bạn
   })
 
-  it('Hiển thị form đăng nhập', () => {
+  // --- YÊU CẦU D: Test UI Elements ---
+  it('Hiển thị form đăng nhập đầy đủ', () => {
     cy.get('[data-testid="username-input"]').should('be.visible')
     cy.get('[data-testid="password-input"]').should('be.visible')
     cy.get('[data-testid="login-button"]').should('be.visible')
@@ -14,18 +15,19 @@ describe('Login E2E Tests', () => {
 
     cy.intercept('POST', '**/api/auth/login', {
       statusCode: 200,
-      body: { token: 'fake-token' },
+      body: { token: 'fake-token-123', user: { name: 'Admin' } },
     }).as('loginRequest')
 
     cy.get('[data-testid="username-input"]').clear().type('admin')
     cy.get('[data-testid="password-input"]').clear().type('Admin123')
     cy.get('[data-testid="login-button"]').click()
 
+    // Chờ API gọi xong
     cy.wait('@loginRequest', { timeout: 10000 })
       .its('response.statusCode')
       .should('eq', 200)
-
-    cy.get('[data-testid="login-error"]').should('not.exist')
+    // Kiểm tra chuyển hướng đến dashboard
+    cy.url().should('include', '/products') 
   })
 
 // Test Scenario 2: Nhập vào username rỗng
@@ -121,10 +123,7 @@ describe('Login E2E Tests', () => {
     cy.get('[data-testid="login-button"]').click()
 
     cy.get('[data-testid="login-error"]').should('be.visible')
-    cy.get('[data-testid="login-error"]').should(
-      'contain.text',
-      'Password must include both letters and numbers'
-    )
+    .and('contain.text', 'Password must include both letters and numbers')
   })
 
 // Test Scenerio 11: Username / mật khẩu chứa khoảng trắng ở đầu hoặc cuối - tự động trim và đăng nhập thành công

@@ -4,8 +4,11 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +46,22 @@ public class ProductController {
     public ResponseEntity<List<Product>> list() {
         // gọi đúng phương thức trong ProductService
         return ResponseEntity.ok(service.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getById(@PathVariable long id) {
+        return ResponseEntity.ok(service.getById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Product> update(@PathVariable long id, @Valid @RequestBody ProductDTO dto) {
+        var p = new Product(dto.name, dto.price, dto.quantity, dto.description, dto.category);
+        return ResponseEntity.ok(service.update(id, p));
     }
 }
