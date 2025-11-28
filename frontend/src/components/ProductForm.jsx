@@ -36,11 +36,11 @@ export default function ProductForm({ token }) {
       if (isEditMode) {
         const updated = await updateProduct(id, form, token);
         setMsg({ text: `Updated product id=${updated.id}`, type: 'success' });
-        // navigate('/products');
+        navigate('/products');
       } else {
         const created = await createProduct(form, token);
         setMsg({ text: `Created product id=${created.id}`, type: 'success' });
-        // navigate('/products');
+        navigate('/products');
       }
     } catch (err) {
       setMsg({ text: err?.message || (isEditMode ? 'Update failed' : 'Create failed'), type: 'error' });
@@ -76,7 +76,7 @@ export default function ProductForm({ token }) {
           <label htmlFor="category">Category</label>
           <select id="category" name="category" value={form.category} onChange={handleChange} data-testid="product-category-input">
             <option>SPORT</option>
-            <option>ELECTRONIC</option>
+            <option>ELECTRONICS</option>
             <option>FOOD</option>
           </select>
         </div>
