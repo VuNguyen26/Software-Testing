@@ -14,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -81,4 +83,35 @@ public class ProductControllerIntegrationTest {
                         .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized());
     }
+       // PUT /api/products/{id}
+    @Test
+    @DisplayName("PUT /api/products/{id} → should update product")
+    void testUpdateProductSuccess() throws Exception {
+        Product req = new Product("Updated Laptop", 20000000, 15, "Premium", "ELECTRONIC");
+        Product updated = new Product("Updated Laptop", 20000000, 15, "Premium", "ELECTRONIC");
+        updated.setId(1L);
+
+        Mockito.when(service.update(any(Long.class), any(Product.class))).thenReturn(updated);
+
+        mockMvc.perform(put("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Updated Laptop"))
+                .andExpect(jsonPath("$.price").value(20000000))
+                .andExpect(jsonPath("$.quantity").value(15));
+    }
+
+    // DELETE /api/products/{id}
+    @Test
+    @DisplayName("DELETE /api/products/{id} → should delete product")
+    void testDeleteProductSuccess() throws Exception {
+        Mockito.doNothing().when(service).delete(1L);
+
+        mockMvc.perform(delete("/api/products/1"))
+                .andExpect(status().isNoContent());
+    }
+
+
 }
