@@ -7,6 +7,14 @@ export function validateProduct(product) {
     errors.name = 'Product name is required'
   }
 
+  if(product.name && product.name.length > 100) {
+    errors.name = 'Product name must be less than 100 characters'
+  }
+
+  if(product.name && product.name.length < 3) {
+    errors.name = 'Product name must be at least 3 characters'
+  }
+
   if (product.price == null || product.price <= 0) {
     errors.price = 'Price must be greater than 0'
   }
