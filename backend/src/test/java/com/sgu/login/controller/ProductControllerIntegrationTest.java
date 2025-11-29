@@ -53,6 +53,24 @@ public class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$[1].category").value("SPORT"));
     }
 
+    // GET /api/products/{id}
+    @Test
+    @DisplayName("GET /api/products/{id} → should return single product")
+    void testGetProductById() throws Exception {
+        Product product = new Product("Laptop", 15000000, 10, "High-end", "ELECTRONIC");
+        product.setId(1L);
+
+        Mockito.when(service.getById(1L)).thenReturn(product);
+
+        mockMvc.perform(get("/api/products/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Laptop"))
+                .andExpect(jsonPath("$.price").value(15000000))
+                .andExpect(jsonPath("$.quantity").value(10))
+                .andExpect(jsonPath("$.category").value("ELECTRONIC"));
+    }
+
     // POST /api/products
     @Test
     @DisplayName("POST /api/products → should create new product when token valid")
