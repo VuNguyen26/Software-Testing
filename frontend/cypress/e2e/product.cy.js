@@ -36,16 +36,18 @@ describe('Product E2E Tests', () => {
     })
 
     it('should delete a product', () => {
-        productPage.interceptDeleteProduct()
+        cy.intercept('DELETE', '**/api/products/**', {
+            statusCode: 200,
+            body: {}
+        }).as('deleteProduct')
         
         productPage.interceptGetProducts([
             { id: 2, name: 'Product 2', quantity: 10, price: 49.99, description: 'Second product', category: 'ELECTRONICS' },
         ])
         
         productPage.clickDeleteFirstProduct()
-        cy.on('window:confirm', () => true)
         
-        productPage.waitForDeleteProduct()
+        cy.wait('@deleteProduct', { timeout: 5000 })
     })
 
     it('should edit a product', () => {
@@ -131,11 +133,28 @@ describe('Product E2E Tests', () => {
     it('should not change product when editing without modifications', () => {
         productPage.interceptGetProductById(1, { id: 1, name: 'Product 1', quantity: 5, price: 29.99, description: 'First product', category: 'SPORT' })
         
+        productPage.interceptUpdateProduct(1, { id: 1, name: 'Product 1', quantity: 5, price: 29.99, description: 'First product', category: 'SPORT' })
+        
         productPage.clickEditFirstProduct()
         productPage.waitForGetProduct()
         productPage.verifyProductNameValue('Product 1')
         productPage.clickSaveProduct()
-        productPage.verifyNoValidationError()
+        productPage.waitForUpdateProduct()
+        productPage.verifyUrlIncludesProducts()
+    })
+
+    // Test Scenario 11: Tìm kiếm sản phẩm theo tên
+    it('should filter products when searching by name', () => {
+        productPage.searchProduct('Product 1')
+        productPage.verifyProductItemsCountEquals(1)
+        productPage.verifyProductContainsName('Product 1')
+        productPage.verifyProductDoesNotContainName('Product 2')
+    })
+
+    // Test Scenario 12: Tìm kiếm sản phẩm không tồn tại
+    it('should show no products when searching for non-existent product', () => {
+        productPage.searchProduct('NonExistentProduct')
+        productPage.verifyProductItemsCountEquals(0)
     })
 
 })

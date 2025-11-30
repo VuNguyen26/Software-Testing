@@ -42,6 +42,7 @@ export default function ProductList({ token }) {
             type="text"
             placeholder="Search products..."
             className="search-input"
+            data-testid="search-input"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
