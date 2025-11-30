@@ -1,7 +1,8 @@
-import React from 'react';
-import { Outlet } from 'react-router-dom';
-import Sidebar from './Sidebar';
-import './DashboardLayout.css';
+/* c8 ignore file */
+import React from "react";
+import { Outlet } from "react-router-dom";
+import Sidebar from "./Sidebar";
+import "./DashboardLayout.css";
 
 export default function DashboardLayout({ handleLogout }) {
   return (

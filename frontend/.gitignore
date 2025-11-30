@@ -1,0 +1,51 @@
+# -------------------------
+# Node / React
+# -------------------------
+node_modules/
+dist/
+build/
+coverage/
+.vite/
+.vitest/
+*.log
+
+# Vite
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/coverage/
+frontend/.vite/
+frontend/.vitest/
+
+# Cypress
+frontend/cypress/videos/
+frontend/cypress/screenshots/
+
+# -------------------------
+# Java Spring Boot
+# -------------------------
+backend/target/
+backend/.mvn/
+*.jar
+*.war
+*.class
+
+# -------------------------
+# OS/System files
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# IDE / Editor
+# -------------------------
+.vscode/
+.idea/
+*.iml
+
+# -------------------------
+# Test reports
+# -------------------------
+test-report.xml
+frontend/test-report.xml
+backend/test-report.xml
