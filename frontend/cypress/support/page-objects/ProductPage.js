@@ -213,6 +213,56 @@ class ProductPage {
     return cy.wait('@loginRequest', { timeout: 5000 })
   }
 
+  // Additional helper methods
+  clearAndTypeProductName(name) {
+    this.productNameInput.clear().type(name)
+  }
+
+  clearAndTypeProductPrice(price) {
+    this.productPriceInput.clear().type(price)
+  }
+
+  typeProductPrice(price) {
+    this.productPriceInput.type(price)
+  }
+
+  verifyProductItemsExist() {
+    this.productItems.its('length').should('be.gte', 1)
+  }
+
+  verifyNoValidationError() {
+    cy.get('body').then($body => {
+      if ($body.find('[data-testid="validation-error"]').length > 0) {
+        throw new Error('Validation error should not exist')
+      }
+    })
+  }
+
+  // Search functionality
+  get searchInput() {
+    return cy.get('[data-testid="search-input"]')
+  }
+
+  searchProduct(searchTerm) {
+    this.searchInput.clear().type(searchTerm)
+  }
+
+  clearSearch() {
+    this.searchInput.clear()
+  }
+
+  verifyProductItemsCountEquals(count) {
+    this.productItems.should('have.length', count)
+  }
+
+  verifyProductContainsName(name) {
+    this.productItems.should('contain', name)
+  }
+
+  verifyProductDoesNotContainName(name) {
+    this.productItems.should('not.contain', name)
+  }
+
   // Login helper for beforeEach
   loginAsAdmin() {
     cy.get('[data-testid="username-input"]').clear().type('admin')
