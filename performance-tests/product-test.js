@@ -1,18 +1,6 @@
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 
-// Cấu hình kịch bản tải (Nhẹ hơn Login chút vì API này nặng hơn)
-// export const options = {
-//   stages: [
-//     { duration: '30s', target: 50 },  // Ramp up: Tăng dần lên 50 user
-//     { duration: '1m', target: 200 },  // Load test: Giữ 200 user liên tục
-//     { duration: '30s', target: 0 },   // Ramp down: Giảm về 0
-//   ],
-//   thresholds: {
-//     http_req_duration: ['p(95)<1000'], // API lấy danh sách sản phẩm cho phép chậm hơn (1s)
-//     http_req_failed: ['rate<0.01'],    // Tỷ lệ lỗi vẫn phải dưới 1%
-//   },
-// };
 
 export const options = {
   stages: [
