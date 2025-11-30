@@ -1,4 +1,6 @@
-# Java
+# ===========================
+#      JAVA / MAVEN
+# ===========================
 *.class
 *.log
 *.jar
@@ -23,76 +25,64 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 
-# Node.js
+# Spring Boot logs
+backend/logs/
+
+# ===========================
+#        NODE / VITE
+# ===========================
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-lerna-debug.log*
-.pnpm-debug.log*
+pnpm-debug.log*
+vite.config.js.timestamp
 
-# Testing & Coverage
+# Vite cache
+.vite/
+frontend/.vite/
+
+# Dist build
+dist/
+build/
+
+# ===========================
+#     TESTING / COVERAGE
+# ===========================
 coverage/
-*.lcov
 .nyc_output
+.vitest/
+
+# Cypress
 cypress/screenshots/
 cypress/videos/
+cypress/downloads/
 
-# Build
-build/
-dist/
-*.tsbuildinfo
-
-# Environment
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# IDE
-.idea/
-.vscode/
-*.swp
-*.swo
-*~
-.project
-.classpath
-.settings/
-*.iml
-.DS_Store
-
-# Logs
-logs/
-*.log
-
-
-# Build output
-dist/
-build/
-
-# Environment files
+# ===========================
+#     ENVIRONMENT
+# ===========================
 .env
 .env.local
 .env.development
 .env.production
+.env.test
+.env.*.local
 
-# Logs
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# System files
+# ===========================
+#          IDE / OS
+# ===========================
+.idea/
+.vscode/
+*.iml
 .DS_Store
 Thumbs.db
 
-# IDE folders
-.vscode/
-.idea/
+# Swap files
+*.swp
+*.swo
+*~
 
-# Coverage
-coverage/
-.vitest/
-
-# Temporary
+# ===========================
+#      TEMPORARY FILES
+# ===========================
 *.local
