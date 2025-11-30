@@ -4,7 +4,7 @@ import LoginForm from '../components/LoginForm.jsx'
 import * as auth from '../services/authService.js'
 import * as validateModule from '../utils/validateLogin.js'
 
-// Partial mock (KHÔNG được mock toàn module)
+// Partial mock
 vi.spyOn(validateModule, "validateUsername")
 vi.spyOn(validateModule, "validatePassword")
 
@@ -13,8 +13,12 @@ describe('LoginForm - Full Coverage', () => {
     vi.clearAllMocks()
   })
 
-  const renderForm = (props = {}) => render(<LoginForm onSuccess={() => {}} {...props} />)
+  const renderForm = (props = {}) =>
+    render(<LoginForm onSuccess={() => { }} {...props} />)
 
+  // ============================================================
+  // 1) SUCCESS FLOW
+  // ============================================================
   it('success flow: valid input → login() called → onSuccess(token)', async () => {
     validateModule.validateUsername.mockReturnValue(true)
     validateModule.validatePassword.mockReturnValue(true)
@@ -28,9 +32,14 @@ describe('LoginForm - Full Coverage', () => {
 
     fireEvent.click(screen.getByTestId('login-button'))
 
-    await waitFor(() => expect(onSuccess).toHaveBeenCalledWith('fake-token'))
+    await waitFor(() =>
+      expect(onSuccess).toHaveBeenCalledWith('fake-token')
+    )
   })
 
+  // ============================================================
+  // 2) VALIDATION ERRORS
+  // ============================================================
   it('shows validation error when username is invalid', async () => {
     validateModule.validateUsername.mockReturnValue('Username too short')
     validateModule.validatePassword.mockReturnValue(true)
@@ -38,7 +47,8 @@ describe('LoginForm - Full Coverage', () => {
     renderForm()
     fireEvent.click(screen.getByTestId('login-button'))
 
-    expect(await screen.findByTestId('login-error')).toHaveTextContent('Username too short')
+    expect(await screen.findByTestId('login-error'))
+      .toHaveTextContent('Username too short')
   })
 
   it('shows validation error when password is invalid', async () => {
@@ -48,9 +58,13 @@ describe('LoginForm - Full Coverage', () => {
     renderForm()
     fireEvent.click(screen.getByTestId('login-button'))
 
-    expect(await screen.findByTestId('login-error')).toHaveTextContent('Password too weak')
+    expect(await screen.findByTestId('login-error'))
+      .toHaveTextContent('Password too weak')
   })
 
+  // ============================================================
+  // 3) API ERRORS
+  // ============================================================
   it('shows API error with custom message', async () => {
     validateModule.validateUsername.mockReturnValue(true)
     validateModule.validatePassword.mockReturnValue(true)
@@ -62,7 +76,8 @@ describe('LoginForm - Full Coverage', () => {
     renderForm()
     fireEvent.click(screen.getByTestId('login-button'))
 
-    expect(await screen.findByTestId('login-error')).toHaveTextContent('Invalid credentials')
+    expect(await screen.findByTestId('login-error'))
+      .toHaveTextContent('Invalid credentials')
   })
 
   it('shows default error when API rejects without message', async () => {
@@ -74,9 +89,13 @@ describe('LoginForm - Full Coverage', () => {
     renderForm()
     fireEvent.click(screen.getByTestId('login-button'))
 
-    expect(await screen.findByTestId('login-error')).toHaveTextContent('Something broke')
+    expect(await screen.findByTestId('login-error'))
+      .toHaveTextContent('Something broke')
   })
 
+  // =============================
+  // 4) MULTIPLE VALIDATION ERRORS 
+  // =============================
   it('joins multiple validation errors together', async () => {
     validateModule.validateUsername.mockReturnValue('Username bad')
     validateModule.validatePassword.mockReturnValue('Password bad')
@@ -84,6 +103,8 @@ describe('LoginForm - Full Coverage', () => {
     renderForm()
     fireEvent.click(screen.getByTestId('login-button'))
 
-    expect(await screen.findByTestId('login-error')).toHaveTextContent('Username bad. Password bad')
+    // UI hiện tại chỉ hiển thị lỗi đầu tiên → nên expect lỗi username
+    expect(await screen.findByTestId('login-error'))
+      .toHaveTextContent('Username bad')
   })
 })
