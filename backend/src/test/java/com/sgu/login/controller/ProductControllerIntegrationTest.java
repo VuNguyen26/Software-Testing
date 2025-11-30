@@ -10,6 +10,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -20,10 +21,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sgu.login.config.TestSecurityConfig;
 import com.sgu.login.model.Product;
 import com.sgu.login.service.ProductService;
 
 @WebMvcTest(ProductController.class)
+@Import(TestSecurityConfig.class)
 @DisplayName("ProductController Integration Tests (with real methods from your project)")
 public class ProductControllerIntegrationTest {
 

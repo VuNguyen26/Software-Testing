@@ -1,5 +1,6 @@
 package com.sgu.login.service;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.sgu.login.model.User;
 import com.sgu.login.repository.UserRepository;
@@ -7,9 +8,11 @@ import com.sgu.login.repository.UserRepository;
 @Service
 public class AuthService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthService(UserRepository userRepository) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public String authenticate(String username, String password) {
@@ -20,8 +23,8 @@ public class AuthService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 3. Kiểm tra mật khẩu
-        if (!user.getPassword().equals(password)) {
+        // 3. Kiểm tra mật khẩu với BCrypt
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Invalid password");
         }
 
