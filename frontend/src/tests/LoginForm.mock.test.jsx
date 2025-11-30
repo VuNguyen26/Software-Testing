@@ -1,3 +1,4 @@
+import React from "react"
 import { render, screen, fireEvent } from "@testing-library/react"
 import * as authService from "@/services/authService"
 import LoginForm from "@/components/LoginForm"
@@ -12,7 +13,19 @@ describe("Mock testing for LoginForm", () => {
   test("mock login success & failure", async () => {
     // THÀNH CÔNG
     authService.login.mockResolvedValueOnce({ token: "demo-token" })
-    render(<LoginForm />)
+
+    // Render a small wrapper that shows a Success message when onSuccess is called
+    const Wrapper = () => {
+      const [success, setSuccess] = React.useState(false)
+      return (
+        <>
+          <LoginForm onSuccess={() => setSuccess(true)} />
+          {success && <div>Success</div>}
+        </>
+      )
+    }
+
+    render(<Wrapper />)
 
     // Form của bạn không có htmlFor trong label, nên dùng getAllByRole thay vì getByLabelText
     const usernameInput = screen.getByRole("textbox") // input đầu tiên là text
