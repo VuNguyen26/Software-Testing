@@ -2,10 +2,20 @@ server:
   port: 8080
 
 spring:
+  # =================================================================================================
+  # DATABASE CONFIGURATION
+  # The application failed to start because it could not connect to your local MySQL database.
+  # Please update the 'username' and 'password' below to match your MySQL setup.
+  #
+  # COMMON ISSUE: If your local MySQL 'root' user does not have a password,
+  # you should leave the password field blank, like this:
+  # password:
+  # localhost <-> mysql
+  # =================================================================================================
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/sgu_assignment?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root}
+    password: ${DB_PASSWORD:root} # <-- CHANGE THIS to your root password, or leave it blank.
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

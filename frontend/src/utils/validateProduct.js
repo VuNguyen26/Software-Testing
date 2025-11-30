@@ -11,6 +11,10 @@ export function validateProduct(product) {
     errors.price = 'Price must be greater than 0'
   }
 
+  if (product.price >= 1000000000) {
+    errors.price = 'Price must be less than 1 billion'
+  }
+
   if (product.quantity == null || product.quantity < 0) {
     errors.quantity = 'Quantity cannot be negative'
   }
@@ -19,12 +23,11 @@ export function validateProduct(product) {
     errors.description = 'Description too long'
   }
 
-  const validCategories = ['Electronics', 'Food', 'Clothing', 'SPORT', 'Accessories']
+  const validCategories = ['ELECTRONICS', 'FOOD', 'CLOTHING', 'SPORT', 'ACCESSORIES']
   if (product.category && !validCategories.includes(product.category)) {
     errors.category = 'Invalid category'
   }
 
-  if (Object.keys(errors).length === 0) return true
-  if (Object.keys(errors).length === 0) return {}
-  return errors
+  if (Object.keys(errors).length === 0) return true;
+  return errors;
 }

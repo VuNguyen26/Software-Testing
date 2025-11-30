@@ -1,4 +1,5 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
+import { MemoryRouter } from "react-router-dom"
 import * as productService from "@/services/productService"
 import * as validateUtils from "@/utils/validateProduct"
 import ProductForm from "@/components/ProductForm"
@@ -13,7 +14,11 @@ describe("Mock testing for ProductForm", () => {
     // Dùng spyOn cho đúng reference
     const spy = vi.spyOn(productService, "createProduct").mockResolvedValueOnce({ id: 123 })
 
-    render(<ProductForm />)
+    render(
+      <MemoryRouter>
+        <ProductForm />
+      </MemoryRouter>
+    )
 
     fireEvent.change(screen.getByLabelText(/name/i), { target: { value: "Cake" } })
     fireEvent.change(screen.getByLabelText(/price/i), { target: { value: 1000 } })
@@ -36,9 +41,10 @@ describe("Mock testing for ProductForm", () => {
       }),
       undefined
     )
-    
+
     // Kiểm tra UI hiển thị kết quả
-    expect(await screen.findByText(/id=123/i)).toBeInTheDocument()
+    const successMessage = await screen.findByRole('status')
+    expect(successMessage).toHaveTextContent(/id=123/i)
 
     spy.mockRestore()
   })
