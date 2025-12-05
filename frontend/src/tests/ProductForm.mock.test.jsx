@@ -146,13 +146,11 @@ describe("ProductForm Integration Mock Tests", () => {
 
     // Verify: Gọi hàm updateProduct với ID và Data mới
     await waitFor(() => expect(updateSpy).toHaveBeenCalledTimes(1))
-    expect(createSpy).not.toHaveBeenCalled() // Không được gọi hàm tạo mới
+    expect(createSpy).not.toHaveBeenCalled()
 
     expect(updateSpy).toHaveBeenCalledWith(
       "999", // ID từ URL
       expect.objectContaining({ name: "Updated Name" })
-      // Note: token parameter is optional and may not be passed
     )
   })
-
 })
