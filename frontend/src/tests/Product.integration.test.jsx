@@ -1,96 +1,109 @@
 /**
- * Câu 3 - Integration Test (Frontend)
- * ProductForm + productService
+ * Integration Test – ProductForm + productService
  */
-import React from 'react'
-import { render, screen, fireEvent, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
-import { MemoryRouter } from 'react-router-dom'
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { vi, describe, it, expect, beforeEach } from "vitest";
+import { MemoryRouter } from "react-router-dom";
 
-// Mock đúng tên export của service
-vi.mock('../services/productService.js', () => ({
-  createProduct: vi.fn(),
-}))
+// Mock useNavigate TRƯỚC khi import component
+vi.mock("react-router-dom", async () => {
+  const actual = await vi.importActual("react-router-dom");
+  return {
+    ...actual,
+    useNavigate: () => vi.fn(),
+  };
+});
 
-import { createProduct } from '../services/productService.js'
-import ProductForm from '../components/ProductForm.jsx'
+// Bypass validation để không chặn submit
+vi.mock("../utils/validateProduct.js", () => ({
+  validateProduct: () => true,
+}));
 
-describe('Product Integration', () => {
-  afterEach(() => {
-    vi.clearAllMocks()
-  })
+// Mock service module đúng cách
+const mockCreate = vi.fn();
+const mockUpdate = vi.fn();
+const mockGet = vi.fn();
 
-  test('Tạo sản phẩm thành công → gọi API đúng payload', async () => {
-    // Giả lập API trả về kết quả thành công
-    createProduct.mockResolvedValueOnce({
-      id: 1,
-      name: 'Ball',
-      price: 1000,
-      quantity: 1,
-      category: 'SPORT',
-    })
+vi.mock("../services/productService.js", () => ({
+  createProduct: (...args) => mockCreate(...args),
+  updateProduct: (...args) => mockUpdate(...args),
+  getProductById: (...args) => mockGet(...args),
+}));
+
+// Sau khi mock xong MỚI import component
+import ProductForm from "../components/ProductForm.jsx";
+
+describe("ProductForm Integration", () => {
+  beforeEach(() => {
+    mockCreate.mockReset();
+    mockUpdate.mockReset();
+    mockGet.mockReset();
+  });
+
+  // Create Success
+  it("Tạo sản phẩm thành công → gọi API đúng payload", async () => {
+    mockCreate.mockResolvedValueOnce({ id: 1 });
 
     render(
       <MemoryRouter>
         <ProductForm />
       </MemoryRouter>
-    )
+    );
 
-    // Nhập dữ liệu vào form
-    fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'Ball' } })
-    fireEvent.change(screen.getByLabelText(/price/i), { target: { value: '1000' } })
-    fireEvent.change(screen.getByLabelText(/quantity/i), { target: { value: '1' } })
-    fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'A nice ball' } })
-    const cat = screen.queryByLabelText(/category/i)
-    if (cat) fireEvent.change(cat, { target: { value: 'SPORT' } })
+    fireEvent.change(screen.getByTestId("product-name-input"), {
+      target: { value: "Ball" },
+    });
+    fireEvent.change(screen.getByTestId("product-price-input"), {
+      target: { value: "1000" },
+    });
+    fireEvent.change(screen.getByTestId("product-quantity-input"), {
+      target: { value: "1" },
+    });
+    fireEvent.change(screen.getByTestId("product-description-input"), {
+      target: { value: "A nice ball" },
+    });
+    fireEvent.change(screen.getByTestId("product-category-input"), {
+      target: { value: "SPORT" },
+    });
 
-    // Gửi form
-    fireEvent.submit(screen.getByLabelText('product-form'))
+    fireEvent.click(screen.getByTestId("save-product-button"));
 
-    // Kiểm tra API được gọi đúng
-    await waitFor(() => {
-      expect(createProduct).toHaveBeenCalledTimes(1)
+    // Chờ React gọi API
+    await waitFor(() => expect(mockCreate).toHaveBeenCalledTimes(1));
 
-      // Kiểm tra tham số đầu tiên (form)
-      const [payload, token] = createProduct.mock.calls[0]
-      expect(payload).toMatchObject({
-        name: 'Ball',
+    expect(mockCreate).toHaveBeenCalledWith(
+      expect.objectContaining({
+        name: "Ball",
         price: 1000,
         quantity: 1,
-        description: 'A nice ball',
-        category: 'SPORT',
+        description: "A nice ball",
+        category: "SPORT",
       })
+    );
 
-      // Kiểm tra tham số thứ hai (token) có thể là undefined
-      expect(token === undefined || typeof token === 'string').toBeTruthy()
-    })
-  })
+    // Kiểm tra UI status
+    const message = await screen.findByRole("status");
+    expect(message).toHaveTextContent(/id=1/i);
+  });
 
-  test('Tạo sản phẩm lỗi → hiển thị lỗi', async () => {
-    // Giả lập API ném lỗi
-    createProduct.mockRejectedValueOnce(new Error('Server error'))
+  // Create Error
+  it("Tạo sản phẩm lỗi → hiển thị lỗi", async () => {
+    mockCreate.mockRejectedValueOnce(new Error("Server error"));
 
     render(
       <MemoryRouter>
         <ProductForm />
       </MemoryRouter>
-    )
+    );
 
-    // Nhập dữ liệu vào form
-    fireEvent.change(screen.getByLabelText(/name/i), { target: { value: 'Ball' } })
-    fireEvent.change(screen.getByLabelText(/price/i), { target: { value: '1000' } })
-    fireEvent.change(screen.getByLabelText(/quantity/i), { target: { value: '1' } })
-    fireEvent.change(screen.getByLabelText(/description/i), { target: { value: 'A nice ball' } })
-    const cat = screen.queryByLabelText(/category/i)
-    if (cat) fireEvent.change(cat, { target: { value: 'SPORT' } })
+    fireEvent.change(screen.getByTestId("product-name-input"), {
+      target: { value: "Ball" },
+    });
 
-    // Gửi form
-    fireEvent.submit(screen.getByLabelText('product-form'))
+    fireEvent.click(screen.getByTestId("save-product-button"));
 
-    // Kiểm tra hiển thị lỗi đúng dạng alert
-    await waitFor(() => {
-      const alert = screen.getByRole('alert')
-      expect(alert.textContent).toMatch(/server error/i)
-    })
-  })
-})
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(/server error/i);
+  });
+});

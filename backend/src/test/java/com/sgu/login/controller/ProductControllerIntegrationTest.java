@@ -10,18 +10,23 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sgu.login.config.TestSecurityConfig;
 import com.sgu.login.model.Product;
 import com.sgu.login.service.ProductService;
 
 @WebMvcTest(ProductController.class)
+@Import(TestSecurityConfig.class)
 @DisplayName("ProductController Integration Tests (with real methods from your project)")
 public class ProductControllerIntegrationTest {
 
@@ -49,6 +54,24 @@ public class ProductControllerIntegrationTest {
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("Laptop"))
                 .andExpect(jsonPath("$[1].category").value("SPORT"));
+    }
+
+    // GET /api/products/{id}
+    @Test
+    @DisplayName("GET /api/products/{id} → should return single product")
+    void testGetProductById() throws Exception {
+        Product product = new Product("Laptop", 15000000, 10, "High-end", "ELECTRONIC");
+        product.setId(1L);
+
+        Mockito.when(service.getById(1L)).thenReturn(product);
+
+        mockMvc.perform(get("/api/products/1"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Laptop"))
+                .andExpect(jsonPath("$.price").value(15000000))
+                .andExpect(jsonPath("$.quantity").value(10))
+                .andExpect(jsonPath("$.category").value("ELECTRONIC"));
     }
 
     // POST /api/products
@@ -81,4 +104,35 @@ public class ProductControllerIntegrationTest {
                         .content(mapper.writeValueAsString(req)))
                 .andExpect(status().isUnauthorized());
     }
+       // PUT /api/products/{id}
+    @Test
+    @DisplayName("PUT /api/products/{id} → should update product")
+    void testUpdateProductSuccess() throws Exception {
+        Product req = new Product("Updated Laptop", 20000000, 15, "Premium", "ELECTRONIC");
+        Product updated = new Product("Updated Laptop", 20000000, 15, "Premium", "ELECTRONIC");
+        updated.setId(1L);
+
+        Mockito.when(service.update(any(Long.class), any(Product.class))).thenReturn(updated);
+
+        mockMvc.perform(put("/api/products/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(req)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(1))
+                .andExpect(jsonPath("$.name").value("Updated Laptop"))
+                .andExpect(jsonPath("$.price").value(20000000))
+                .andExpect(jsonPath("$.quantity").value(15));
+    }
+
+    // DELETE /api/products/{id}
+    @Test
+    @DisplayName("DELETE /api/products/{id} → should delete product")
+    void testDeleteProductSuccess() throws Exception {
+        Mockito.doNothing().when(service).delete(1L);
+
+        mockMvc.perform(delete("/api/products/1"))
+                .andExpect(status().isNoContent());
+    }
+
+
 }

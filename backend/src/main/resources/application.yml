@@ -1,5 +1,12 @@
 server:
   port: 8080
+  # HTTPS configuration (commented out for development)
+  # ssl:
+  #   enabled: true
+  #   key-store: classpath:keystore.p12
+  #   key-store-password: changeit
+  #   key-store-type: PKCS12
+  #   key-alias: tomcat
 
 spring:
   # =================================================================================================
@@ -15,7 +22,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/sgu_assignment?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:root} # <-- CHANGE THIS to your root password, or leave it blank.
+    password: ${DB_PASSWORD:123456} # <-- CHANGE THIS to your root password, or leave it blank.
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:

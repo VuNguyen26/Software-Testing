@@ -3,7 +3,11 @@ import { Link } from 'react-router-dom';
 import { getProducts, deleteProduct } from '../services/productService';
 import './ProductList.css';
 
-export default function ProductList({ token }) {
+export default function ProductList() {
+
+  // Lấy token từ localStorage (không dùng props nữa)
+  const token = localStorage.getItem("token");
+
   const [products, setProducts] = useState([]);
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -11,12 +15,12 @@ export default function ProductList({ token }) {
   const fetchProducts = () => {
     getProducts(token)
       .then(setProducts)
-      .catch((err) => setError(err?.message || 'Load failed'));
+      .catch(err => setError(err?.message || 'Load failed'));
   };
 
   useEffect(() => {
     fetchProducts();
-  }, [token]);
+  }, [token]); // vẫn re-run nếu token thay đổi (hiếm khi xảy ra)
 
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
@@ -28,7 +32,7 @@ export default function ProductList({ token }) {
       }
     }
   };
-  
+
   const filteredProducts = products.filter(product =>
     product.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -37,21 +41,26 @@ export default function ProductList({ token }) {
     <div className="product-list-container">
       <div className="product-list-header">
         <h1>Products</h1>
+
         <div className="product-list-actions">
           <input
             type="text"
             placeholder="Search products..."
             className="search-input"
+            data-testid="search-input"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
-          <Link to="/products/new" className="btn btn-primary">
+
+          <Link to="/products/new" className="btn btn-primary" data-testid="add-product-button">
             Create New Product
           </Link>
         </div>
       </div>
+
       {error && <p role="alert" className="error-message">{error}</p>}
-      <table className="product-table">
+
+      <table className="product-table" data-testid="product-list">
         <thead>
           <tr>
             <th>Name</th>
@@ -60,6 +69,7 @@ export default function ProductList({ token }) {
             <th>Actions</th>
           </tr>
         </thead>
+
         <tbody>
           {filteredProducts.map((p) => (
             <tr key={p.id} data-testid="product-item">
@@ -68,15 +78,21 @@ export default function ProductList({ token }) {
               <td>{p.quantity}</td>
               <td>
                 <Link to={`/products/${p.id}/edit`}>
-                  <button className="btn btn-secondary">Edit</button>
+                  <button className="btn btn-secondary" data-testid="edit-product-button">Edit</button>
                 </Link>
-                <button onClick={() => handleDelete(p.id)} className="btn btn-danger">
+
+                <button 
+                  onClick={() => handleDelete(p.id)} 
+                  className="btn btn-danger" 
+                  data-testid="delete-product-button"
+                >
                   Delete
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
+
       </table>
     </div>
   );

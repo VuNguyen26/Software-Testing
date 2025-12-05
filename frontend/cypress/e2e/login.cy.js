@@ -1,70 +1,111 @@
+import LoginPage from '../support/page-objects/LoginPage'
+
 describe('Login E2E Tests', () => {
+  const loginPage = new LoginPage()
+
   beforeEach(() => {
-    cy.visit('http://localhost:5173') // Đảm bảo port đúng với máy bạn
+    loginPage.visit()
   })
 
   // --- YÊU CẦU D: Test UI Elements ---
   it('Hiển thị form đăng nhập đầy đủ', () => {
-    cy.get('[data-testid="username-input"]').should('be.visible')
-    cy.get('[data-testid="password-input"]').should('be.visible')
-    cy.get('[data-testid="login-button"]').should('be.visible')
+    loginPage.verifyUsernameVisible()
+    loginPage.verifyPasswordVisible()
+    loginPage.verifyLoginButtonVisible()
   })
 
-  // --- YÊU CẦU A & C (Success): Test luồng thành công ---
-  it('Đăng nhập thành công và chuyển hướng', () => {
-    // Mock API thành công
-    cy.intercept('POST', '**/api/auth/login', {
-      statusCode: 200,
-      body: { token: 'fake-token-123', user: { name: 'Admin' } },
-    }).as('loginRequest')
-
-    cy.get('[data-testid="username-input"]').clear().type('admin')
-    cy.get('[data-testid="password-input"]').clear().type('Admin123')
-    cy.get('[data-testid="login-button"]').click()
-
-    // Chờ API gọi xong
-    cy.wait('@loginRequest', { timeout: 10000 })
+// Test Scenario 1: Đăng nhập thành công với thông tin hợp lệ
+  it('Đăng nhập thành công với thông tin hợp lệ', () => {
+    loginPage.interceptLoginSuccess()
+    loginPage.login('admin', 'Admin123')
+    
+    loginPage.waitForLoginRequest()
       .its('response.statusCode')
       .should('eq', 200)
-    // Kiểm tra chuyển hướng đến dashboard
-    cy.url().should('include', '/products') 
+    
+    loginPage.verifyRedirectToProducts()
   })
 
-  // --- YÊU CẦU B: Test Validation (Quan trọng - Bị thiếu) ---
-  it('Hiển thị lỗi khi để trống thông tin (Validation)', () => {
-    cy.get('[data-testid="username-input"]').clear()
-    cy.get('[data-testid="password-input"]').clear()
-    // Không nhập gì cả, bấm Login luôn
-    cy.get('[data-testid="login-button"]').click()
-
-    // Kiểm tra thông báo lỗi "Required"
-    cy.get('[data-testid="login-error"]').should('be.visible')
-    .and('contain.text', 'Username is required')
-    cy.get('[data-testid="login-error"]').should('be.visible')
-    .and('contain.text', 'Password is required')
+// Test Scenario 2: Nhập vào username rỗng
+  it('Hiển thị lỗi khi username rỗng', () => {
+    loginPage.clearUsername()
+    loginPage.fillPassword('Admin123')
+    loginPage.clickLogin()
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Username is required')
   })
 
-  // --- YÊU CẦU C (Error): Test lỗi API/Logic ---
-  it('Hiển thị lỗi khi nhập sai Password (Logic/Format)', () => {
-    cy.get('[data-testid="username-input"]').clear().type('admin')
-    cy.get('[data-testid="password-input"]').clear().type('onlyletters') // Sai format (thiếu số)
-    cy.get('[data-testid="login-button"]').click()
-
-    cy.get('[data-testid="login-error"]').should('be.visible')
-    .and('contain.text', 'Password must include both letters and numbers')
+  // Test Scenario 3: Nhập vào password rỗng
+  it('Hiển thị lỗi khi password rỗng', () => {
+    loginPage.fillUsername('admin')
+    loginPage.clearPassword()
+    loginPage.clickLogin()
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Password is required')
   })
-  
-  it('Hiển thị lỗi khi API trả về 401 (Authentication Failed)', () => {
-     cy.intercept('POST', '**/api/auth/login', {
-      statusCode: 401,
-      body: { message: 'Invalid credentials' },
-    }).as('loginFail')
 
-    cy.get('[data-testid="username-input"]').clear().type('admin')
-    cy.get('[data-testid="password-input"]').clear().type('WrongPass123')
-    cy.get('[data-testid="login-button"]').click()
+  // Test Scenario 4: Nhập vào username không tồn tại
+  it('Hiển thị lỗi khi username không tồn tại', () => {
+    loginPage.interceptLoginFailure()
+    loginPage.login('nonexistentuser', 'SomePassword123')
+    
+    loginPage.waitForLoginFailure()
+    loginPage.verifyErrorVisible()
+  })
 
-    cy.wait('@loginFail')
-    cy.contains('Invalid credentials').should('be.visible')
+  // Test Scenario 5: Nhập vào username quá ngắn
+  it('Hiển thị lỗi khi username quá ngắn', () => {
+    loginPage.login('ad', 'SomePassword123')
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Username must be at least 3 characters')
+  })
+
+  // Test Scenario 6: Nhập vào username quá dài
+  it('Hiển thị lỗi khi username quá dài', () => {
+    loginPage.login('averyveryveryveryveryveryveryveryveryveryveryveryveryveryverylongusername', 'SomePassword123')
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Username must be ≤ 50 characters')
+  })
+
+  // Test Scenario 8: username chứa ký tự đặc biệt hoặc khoảng trắng
+  it('Hiển thị lỗi khi username chứa ký tự đặc biệt hoặc khoảng trắng', () => {
+    loginPage.login('@invalid user!', 'SomePassword123')
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Username contains invalid characters')
+  })
+
+  // Test Scenario 9: password quá ngắn
+  it('Hiển thị lỗi khi password quá ngắn', () => {
+    loginPage.login('validuser', 'a')
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Password must be ≥ 6 characters')
+  })
+
+  // Test Scenario 10: Đăng nhập fail
+  it('Hiển thị lỗi khi nhập sai thông tin', () => {
+    loginPage.login('wronguser', 'wrongpass')
+    
+    loginPage.verifyErrorVisible()
+    loginPage.verifyErrorMessage('Password must include both letters and numbers')
+  })
+
+  // Test Scenario 11: Username / mật khẩu chứa khoảng trắng ở đầu hoặc cuối - tự động trim và đăng nhập thành công
+  it('Tự động trim khoảng trắng và đăng nhập thành công', () => {
+    loginPage.interceptLoginSuccess()
+    loginPage.fillUsername(' admin ')
+    loginPage.fillPassword(' Admin123 ')
+    loginPage.clickLogin()
+    
+    loginPage.waitForLoginRequest()
+      .its('response.statusCode')
+      .should('eq', 200)
+    
+    loginPage.verifyErrorNotExist()
   })
 })

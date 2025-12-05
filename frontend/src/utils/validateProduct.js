@@ -1,33 +1,42 @@
-export function validateProduct(product) {
-  if (!product) return 'Invalid product'
+export function validateProduct(p) {
+  const errors = {};
 
-  const errors = {}
-
-  if (!product.name || product.name.trim() === '') {
-    errors.name = 'Product name is required'
+  if (!p) {
+    errors.general = "Invalid product";
+    return errors;
   }
 
-  if (product.price == null || product.price <= 0) {
-    errors.price = 'Price must be greater than 0'
+  // NAME validation
+  if (!p.name || p.name.trim() === "") {
+    errors.name = "Product name is required";
+  } else if (p.name.length < 3) {
+    errors.name = "Product name is too short";
+  } else if (p.name.length > 100) {
+    errors.name = "Product name is too long";
   }
 
-  if (product.price >= 1000000000) {
-    errors.price = 'Price must be less than 1 billion'
+  // DESCRIPTION validation
+  if (p.description && p.description.length > 500) {
+    errors.description = "Description too long";
   }
 
-  if (product.quantity == null || product.quantity < 0) {
-    errors.quantity = 'Quantity cannot be negative'
+  // PRICE validation
+  if (p.price == null || p.price <= 0) {
+    errors.price = "Price must be greater than 0";
+  } else if (p.price > 999999999) {
+    errors.price = "Price must be less than 1 billion";
   }
 
-  if (product.description && product.description.length > 500) {
-    errors.description = 'Description too long'
+  // QUANTITY validation
+  if (p.quantity == null || p.quantity < 0) {
+    errors.quantity = "Quantity cannot be negative";
   }
 
-  const validCategories = ['ELECTRONICS', 'FOOD', 'CLOTHING', 'SPORT', 'ACCESSORIES']
-  if (product.category && !validCategories.includes(product.category)) {
-    errors.category = 'Invalid category'
+  // CATEGORY validation
+  const validCategories = ["ELECTRONICS", "FOOD", "CLOTHING", "SPORT", "ACCESSORIES"];
+  if (p.category && !validCategories.includes(p.category)) {
+    errors.category = "Invalid category";
   }
 
-  if (Object.keys(errors).length === 0) return true;
   return errors;
 }

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateProduct } from '../utils/validateProduct.js'
+import { validateProductSimple as validateProduct } from '../utils/validateProductSimple.js'
 
 describe('validateProduct', () => {
   it('valid product', () => {

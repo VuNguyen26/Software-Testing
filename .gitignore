@@ -1,0 +1,88 @@
+# ===========================
+#      JAVA / MAVEN
+# ===========================
+*.class
+*.log
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+hs_err_pid*
+replay_pid*
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot logs
+backend/logs/
+
+# ===========================
+#        NODE / VITE
+# ===========================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+vite.config.js.timestamp
+
+# Vite cache
+.vite/
+frontend/.vite/
+
+# Dist build
+dist/
+build/
+
+# ===========================
+#     TESTING / COVERAGE
+# ===========================
+coverage/
+.nyc_output
+.vitest/
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# ===========================
+#     ENVIRONMENT
+# ===========================
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# ===========================
+#          IDE / OS
+# ===========================
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Swap files
+*.swp
+*.swo
+*~
+
+# ===========================
+#      TEMPORARY FILES
+# ===========================
+*.local

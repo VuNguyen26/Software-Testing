@@ -1,45 +1,63 @@
 /**
- * ProductDetail Integration Test
+ * ProductDetail Integration Test – FULL COVERAGE
  */
-import React from 'react'
-import { render, screen, waitFor } from '@testing-library/react'
-import { vi } from 'vitest'
+import React from "react";
+import { render, screen, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 
-vi.mock('../services/productService.js', () => ({
+// Mock service
+vi.mock("../services/productService.js", () => ({
   getProductById: vi.fn(),
-}))
+}));
 
-import { getProductById } from '../services/productService.js'
-import ProductDetail from '../components/ProductDetail.jsx'
+import { getProductById } from "../services/productService.js";
+import ProductDetail from "../components/ProductDetail.jsx";
 
-describe('ProductDetail Integration', () => {
-  afterEach(() => vi.clearAllMocks())
+describe("ProductDetail Integration", () => {
+  afterEach(() => vi.clearAllMocks());
 
-  test('Hiển thị chi tiết sản phẩm khi load thành công', async () => {
+  test("Hiển thị Loading ban đầu", () => {
+    // mock Promise pending (không resolve, không reject)
+    getProductById.mockReturnValue(new Promise(() => {}));
+
+    render(<ProductDetail id={1} />);
+
+    expect(screen.getByRole("status")).toHaveTextContent("Loading...");
+  });
+
+  test("Hiển thị chi tiết sản phẩm khi load thành công", async () => {
     getProductById.mockResolvedValueOnce({
       id: 1,
-      name: 'Ball',
+      name: "Ball",
       price: 1000,
       quantity: 2,
-      category: 'SPORT',
-    })
+      category: "SPORT",
+    });
 
-    render(<ProductDetail id={1} />)
+    render(<ProductDetail id={1} />);
 
-    await waitFor(() => {
-      expect(screen.getByLabelText('product-detail')).toBeInTheDocument()
-      expect(screen.getByText('Ball')).toBeInTheDocument()
-      expect(screen.getByTestId('price').textContent).toBe('1000')
-    })
-  })
+    expect(getProductById).toHaveBeenCalledWith(1);
 
-  test('Hiển thị lỗi khi API lỗi', async () => {
-    getProductById.mockRejectedValueOnce(new Error('Not found'))
+    expect(await screen.findByLabelText("product-detail")).toBeInTheDocument();
+    expect(screen.getByText("Ball")).toBeInTheDocument();
+    expect(screen.getByTestId("price")).toHaveTextContent("1000");
+  });
 
-    render(<ProductDetail id={99} />)
+  test("Hiển thị lỗi khi API trả về lỗi có message", async () => {
+    getProductById.mockRejectedValueOnce(new Error("Not found"));
 
-    await waitFor(() => {
-      expect(screen.getByRole('alert').textContent).toMatch(/not found/i)
-    })
-  })
-})
+    render(<ProductDetail id={99} />);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent(/not found/i);
+  });
+
+  test("Hiển thị lỗi default khi API lỗi không có message", async () => {
+    getProductById.mockRejectedValueOnce({});
+
+    render(<ProductDetail id={999} />);
+
+    const alert = await screen.findByRole("alert");
+    expect(alert).toHaveTextContent("Load failed");
+  });
+});
