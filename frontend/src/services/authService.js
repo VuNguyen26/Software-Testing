@@ -1,13 +1,21 @@
+// src/services/authService.js
 import { api } from "./api";
 
-// Top-level để tăng coverage
 const AUTH_ENDPOINT = "/auth";
 const AUTH_SERVICE = "authService";
 
 /* c8 ignore start */
 export async function login(body) {
   const { data } = await api.post(`${AUTH_ENDPOINT}/login`, body);
-  return data;
+
+  const token = data.token || data.accessToken || data.jwt || data;
+
+  if (typeof token !== "string") {
+    console.error("Login response data = ", data);
+    throw new Error("Invalid token format from server");
+  }
+
+  return token;
 }
 
 export async function register(body) {
@@ -15,8 +23,6 @@ export async function register(body) {
   return data;
 }
 /* c8 ignore stop */
-
-// Cũng được tính vào coverage (top-level)
 export const META = {
   name: AUTH_SERVICE,
   endpoint: AUTH_ENDPOINT,

@@ -23,7 +23,7 @@ export default function LoginForm({ onSuccess }) {
     if (p !== true && p !== '') return setError(p);
 
     try {
-      const token = (await login({ username: trimmedUsername, password: trimmedPassword })) || 'fake-token';
+      const token = await login({ username: trimmedUsername, password: trimmedPassword });
       onSuccess(token);
     } catch (err) {
       setError(err?.message || 'Invalid credentials');
