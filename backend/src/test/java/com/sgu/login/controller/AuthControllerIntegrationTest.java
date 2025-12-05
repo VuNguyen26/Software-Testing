@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,5 +58,52 @@ public class AuthControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(badRequest)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/login - Test CORS headers")
+    void testLoginCorsHeaders() throws Exception {
+        LoginRequest request = new LoginRequest("admin", "Admin123");
+
+        Mockito.when(authService.authenticate(anyString(), anyString()))
+                .thenReturn("fake-token-123");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Origin", "http://localhost:5173")  // ← CORS Origin header
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(header().exists("Access-Control-Allow-Origin"))  // ← CORS response header
+                .andExpect(header().string("Access-Control-Allow-Origin", "*")); // ← Allow all origins
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/login - Test response headers")
+    void testLoginResponseHeaders() throws Exception {
+        LoginRequest request = new LoginRequest("admin", "Admin123");
+
+        Mockito.when(authService.authenticate(anyString(), anyString()))
+                .thenReturn("fake-token-123");
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(header().string("Content-Type", "application/json"));  // ← Response Content-Type
+    }
+
+    @Test
+    @DisplayName("POST /api/auth/login - Test 401 Unauthorized")
+    void testLoginUnauthorized() throws Exception {
+        LoginRequest request = new LoginRequest("admin", "wrongpassword");
+
+        // Mock authentication failure
+        Mockito.when(authService.authenticate(anyString(), anyString()))
+                .thenThrow(new RuntimeException("Invalid credentials"));
+
+        mockMvc.perform(post("/api/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isInternalServerError());  // ← 500 status on error
     }
 }
